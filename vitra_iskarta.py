@@ -2,10 +2,15 @@ import streamlit as st
 import gspread
 from datetime import datetime
 
-# Google Sheets'e bağlan
-sheet = gspread.service_account_from_dict(st.secrets["gcp_service_account"]).open("VitrA_Iskarta_Tablosu").sheet1
+# Secrets'tan bilgiyi al
+creds_dict = dict(st.secrets["gcp_service_account"])
 
-# Arayüz
+# KRİTİK ADIM: Private key içindeki \n karakterlerini gerçek satır atlamasına çevir
+creds_dict['private_key'] = creds_dict['private_key'].replace('\\n', '\n')
+
+# Google Sheets'e bağlan
+sheet = gspread.service_account_from_dict(creds_dict).open("VitrA_Iskarta_Tablosu").sheet1
+
 st.title("🏭 VitrA Iskarta Otomatik Kayıt Sistemi")
 
 hat = st.text_input("Hat")
