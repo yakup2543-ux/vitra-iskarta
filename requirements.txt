@@ -1,5 +1,3 @@
 streamlit
-pandas
-openpyxl
-pillow
-twilio
+gspread
+oauth2client
