@@ -1,9 +1,9 @@
 import streamlit as st
 import requests
 
-# API anahtarını koda gömdüm
+# Güncel Webhook URL'in ve ImgBB anahtarın
+WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz2BVBq3px0t5fM8qjfP_HwGpkrMO9syOOv26zPH_FdkCNgjemHQTsFrcV4jrjzW06BUQ/exec"
 IMGBB_API_KEY = "ba2e57de6032d83a9c332f9b493ce6f1"
-WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby64s83riiaJauxCdf1agLeKN_ow_tBz-kwzf_qAlWa1YgmNbUGlJ7-bfuC92fnVcTRbQ/exec"
 
 st.title("🏭 VitrA Iskarta Otomatik Kayıt Sistemi")
 
@@ -18,7 +18,7 @@ uploaded_file = st.file_uploader("Fotoğraf Yükle", type=['png', 'jpg', 'jpeg']
 
 if st.button("🚀 Kaydet"):
     if uploaded_file is not None:
-        st.info("Fotoğraf yükleniyor...")
+        st.info("Fotoğraf buluta yükleniyor...")
         
         # 1. Fotoğrafı ImgBB'ye yükle
         response = requests.post(
@@ -45,8 +45,8 @@ if st.button("🚀 Kaydet"):
             if sheet_response.status_code == 200:
                 st.success("✅ Veri ve fotoğraf başarıyla kaydedildi!")
             else:
-                st.error("❌ Excel'e kayıt hatası.")
+                st.error("❌ Google Sheets'e kayıt hatası oluştu.")
         else:
-            st.error("❌ Fotoğraf yüklenemedi.")
+            st.error("❌ Fotoğraf yüklenirken bir sorun oluştu.")
     else:
         st.warning("Lütfen bir fotoğraf seçin.")
