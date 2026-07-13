@@ -1,3 +1,8 @@
+import streamlit as st
+import gspread
+from datetime import datetime
+
+# Private Key
 MY_PRIVATE_KEY = r"""-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCkF3FbLhXydt3u
 4HRng/vHivrpKHPdGONlzyq5ZiCtzXtVfs2V+guigF2nuhoHcnObOSTPCVWblMN1
@@ -26,3 +31,34 @@ NYadatvPZps1+j6oFWpQJed6yqeKqDK4dPXm9sw2VKev4vuwhH6b84ybb/jzeIEu
 a0aQK3SMZLZhyuKSA5ZlUcvnew0IXzLu9nxvTaPtjGMz8lhBqFuKaUnzjRY0i9K/
 W+phSsHhZQMME2V+Rq2RV4Gd
 -----END PRIVATE KEY-----"""
+
+credentials = {
+    "type": "service_account",
+    "project_id": "vitraiskarta",
+    "private_key_id": "22ab8337f6c00e2b3189410fbcf2116a677c445b",
+    "private_key": MY_PRIVATE_KEY,
+    "client_email": "iskarta@vitraiskarta.iam.gserviceaccount.com",
+    "client_id": "104208590896291725939",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/iskarta%40vitraiskarta.iam.gserviceaccount.com"
+}
+
+# Sheets bağlantısı
+sheet = gspread.service_account_from_dict(credentials).open("VitrA_Iskarta_Tablosu").sheet1
+
+# Arayüz
+st.title("🏭 VitrA Iskarta Otomatik Kayıt Sistemi")
+
+hat = st.text_input("Hat")
+urun = st.text_input("Ürün İsmi")
+hata = st.text_input("Hata Adı")
+neden = st.text_input("Muhtemel Neden")
+sonuc = st.text_input("Sonuç")
+notlar = st.text_area("Notlar")
+
+if st.button("🚀 Excel'e Kaydet"):
+    tarih = datetime.now().strftime("%d.%m.%Y %H:%M")
+    sheet.append_row([tarih, hat, urun, hata, neden, sonuc, notlar])
+    st.success("✅ Veri başarıyla Google Sheets'e kaydedildi!")
