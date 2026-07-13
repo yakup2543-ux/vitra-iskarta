@@ -1,21 +1,11 @@
 import streamlit as st
 import gspread
-import json
 from datetime import datetime
 
-# 1. JSON dosyasını açıp sözlük (dict) olarak yüklüyoruz
-with open("gcp_keys.json") as f:
-    credentials = json.load(f)
-
-# 2. KRİTİK ADIM: Private key içindeki \n yazısını alıp GERÇEK satır atlamasına çeviriyoruz.
-# Bu satır hatayı %100 kesecek olan satırdır.
-credentials["private_key"] = credentials["private_key"].replace("\\n", "\n")
-
-# 3. Temizlenmiş sözlüğü gspread'e veriyoruz
-sheet = gspread.service_account_from_dict(credentials).open("VitrA_Iskarta_Tablosu").sheet1
+# Sadece bu basit satırı kullan, hata payı sıfır olsun
+sheet = gspread.service_account(filename="gcp_keys.json").open("VitrA_Iskarta_Tablosu").sheet1
 
 st.title("🏭 VitrA Iskarta Otomatik Kayıt Sistemi")
-
 hat = st.text_input("Hat")
 urun = st.text_input("Ürün İsmi")
 hata = st.text_input("Hata Adı")
