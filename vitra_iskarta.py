@@ -1,14 +1,13 @@
 import streamlit as st
 import requests
 import base64
-import google.generativeai as genai
+from openai import OpenAI
 
-# --- API VE WEBHOOK AYARLARI ---
-GEMINI_API_KEY = "AQ.Ab8RN6J_xUYuM2Kj6n-PojxIyXWl7Fb25FZ4nklsoVzPxnFxoQ" 
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# --- CHATGPT API VE WEBHOOK AYARLARI ---
+OPENAI_API_KEY = "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"
+client = OpenAI(api_key=OPENAI_API_KEY)
 
-# Senin gönderdiğin Webhook URL'si
+# Senin gönderdiğin Webhook URL'si (Değişmedi, aynen duruyor)
 WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzsff54__0p1WaNqBrnlL_2xlcm_nQoa1l_-WdGsTE9hCgljEOZvHIv2htfz47eU-Er-Q/exec"
 
 st.title("🏭 VitrA Iskarta Kayıt Sistemi")
@@ -18,17 +17,21 @@ urun = st.text_input("Ürün İsmi")
 hata = st.text_input("Hata Adı")
 neden = st.text_input("Muhtemel Neden")
 
-# --- YENİ EKLENEN YAPAY ZEKA BUTONU ---
-if st.button("🤖 Yapay Zekadan Çözüm İste"):
+# --- CHATGPT BUTONU ---
+if st.button("🤖 ChatGPT'den Çözüm İste"):
     if hat and hata:
-        with st.spinner("Proses verileri analiz ediliyor..."):
+        with st.spinner("VitrA proses verileri ChatGPT tarafından analiz ediliyor..."):
             prompt = f"Üretim hattında bir sorun var. Hat: {hat}, Ürün: {urun}, Hata: {hata}, Neden: {neden}. Bu hatanın kök nedeni nedir ve nasıl çözülebilir? Lütfen çok kısa ve net bir aksiyon planı ver."
             try:
-                response = model.generate_content(prompt)
-                st.info("💡 **Yapay Zeka Çözüm Önerisi:**\n\n" + response.text)
+                # ChatGPT modeline soruyu gönderiyoruz
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                cevap = response.choices[0].message.content
+                st.info("💡 **ChatGPT Çözüm Önerisi:**\n\n" + cevap)
             except Exception as e:
-                # Hatayı gizlemeyip doğrudan ekrana yazdırıyoruz
-                st.error(f"Sistem Hatası: {e}")
+                st.error(f"ChatGPT Sistem Hatası: {e}")
     else:
         st.warning("Lütfen yapay zekaya sormadan önce en azından Hat ve Hata Adı kısımlarını doldur!")
 # --------------------------------------
