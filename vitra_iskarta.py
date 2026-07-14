@@ -27,7 +27,8 @@ if st.button("🤖 Yapay Zekadan Çözüm İste"):
                 response = model.generate_content(prompt)
                 st.info("💡 **Yapay Zeka Çözüm Önerisi:**\n\n" + response.text)
             except Exception as e:
-                st.error("Yapay zeka ile bağlantı kurulamadı. API anahtarını doğru girdiğinden emin ol.")
+                # Hatayı gizlemeyip doğrudan ekrana yazdırıyoruz
+                st.error(f"Sistem Hatası: {e}")
     else:
         st.warning("Lütfen yapay zekaya sormadan önce en azından Hat ve Hata Adı kısımlarını doldur!")
 # --------------------------------------
